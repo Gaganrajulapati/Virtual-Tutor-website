@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Videos - Smart Learn</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <style class="bg-white shadow p-4 mb-8">
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+      .video-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .video-thumbnail {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .video-info {
+        padding: 15px;
+      }
+      .video-title {
+        margin: 0 0 10px 0;
+        font-size: 1.1em;
+        color: #333;
+      }
+      .rating-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .stars {
+        display: flex;
+        gap: 5px;
+      }
+      .star {
+        font-size: 24px;
+        cursor: pointer;
+        color: #ddd;
+        transition: color 0.2s;
+      }
+      .star:hover {
+        color: #ffd700;
+      }
+      .star.filled {
+        color: #ffd700;
+      }
+      .rating-info {
+        font-size: 0.9em;
+        color: #666;
+      }
+      .message {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        display: none;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow p-4 mb-8">
+        <div class="container mx-auto flex space-x-6 justify-center">
+            <a href="{{ url_for('index') }}" class="text-blue-600 font-semibold hover:underline">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="text-blue-600 font-semibold hover:underline">Dashboard</a>
+            <a href="{{ url_for('path') }}" class="text-blue-600 font-semibold hover:underline">Path</a>
+            <a href="{{ url_for('videos') }}" class="text-blue-600 font-semibold hover:underline">Videos</a>
+            <a href="{{ url_for('quiz') }}" class="text-blue-600 font-semibold hover:underline">Quiz</a>
+            <a href="{{ url_for('descri') }}" class="text-blue-600 font-semibold hover:underline">Description</a>
+        </div>
+    </nav>
+
+    <div class="video-grid" id="videoContainer"></div>
+
+    <script>
+      function showMessage(cardElement, message, isError = false) {
+        const messageDiv = cardElement.querySelector(".message");
+        messageDiv.textContent = message;
+        messageDiv.style.display = "block";
+        messageDiv.className = `message ${isError ? "error" : "success"}`;
+        setTimeout(() => {
+          messageDiv.style.display = "none";
+        }, 3000);
+      }
+
+      async function rateVideo(videoId, rating, cardElement) {
+        try {
+          const response = await fetch("http://localhost:5000/api/rate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ video_id: videoId, rating: rating }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Update the rating display
+            const ratingInfo = cardElement.querySelector(".rating-info");
+            ratingInfo.textContent = `Average Rating: ${data.average_rating.toFixed(
+              1
+            )} `;
+
+            // Update stars
+            const stars = cardElement.querySelectorAll(".star");
+            stars.forEach((star, index) => {
+              star.classList.toggle(
+                "filled",
+                index < Math.round(data.average_rating)
+              );
+            });
+
+            showMessage(cardElement, "Rating submitted successfully!");
+          } else {
+            showMessage(
+              cardElement,
+              data.error || "Error submitting rating",
+              true
+            );
+          }
+        } catch (error) {
+          console.error("Error rating video:", error);
+          showMessage(cardElement, "Error submitting rating", true);
+        }
+      }
+
+      function createStarRating(rating, videoId, container) {
+        const starsContainer = document.createElement("div");
+        starsContainer.className = "stars";
+
+        for (let i = 1; i <= 5; i++) {
+          const star = document.createElement("span");
+          star.className = `star ${i <= Math.round(rating) ? "filled" : ""}`;
+          star.textContent = "★";
+          star.onclick = () => rateVideo(videoId, i, container);
+          starsContainer.appendChild(star);
+        }
+
+        return starsContainer;
+      }
+
+      async function fetchVideos() {
+        try {
+          const response = await fetch("http://localhost:5000/api/videos");
+          const videos = await response.json();
+          displayVideos(videos);
+        } catch (error) {
+          console.error("Error fetching videos:", error);
+        }
+      }
+
+      function displayVideos(videos) {
+        const container = document.getElementById("videoContainer");
+        container.innerHTML = "";
+
+        videos.forEach((video) => {
+          const videoCard = document.createElement("div");
+          videoCard.className = "video-card";
+
+          const videoId = video.video_id;
+          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+          videoCard.innerHTML = `
+                    <img src="${thumbnailUrl}" 
+                         alt="${video.title}" 
+                         class="video-thumbnail" 
+                         onclick="window.open('${video.url}', '_blank')">
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="rating-section">
+                            <div class="rating-info">
+                                Average Rating: ${video.average_rating.toFixed(
+                                  1
+                                )} 
+                                (${
+                                  video.ratings ? video.ratings.length : 0
+                                } ratings)
+                            </div>
+                        </div>
+                        <div class="message"></div>
+                    </div>
+                `;
+
+          // Add star rating after the rating info
+          const ratingSection = videoCard.querySelector(".rating-section");
+          ratingSection.insertBefore(
+            createStarRating(video.average_rating, videoId, videoCard),
+            ratingSection.firstChild
+          );
+
+          container.appendChild(videoCard);
+        });
+      }
+
+      // Fetch videos when the page loads
+      document.addEventListener("DOMContentLoaded", fetchVideos);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Learning Path</title>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <style>
+        .path-container {
+            position: relative;
+        }
+        .path-line {
+            position: absolute;
+            top: 0;
+            left: 200px;
+            width: 8px;
+            height: 100%;
+            background-color: #e5e7eb;
+            z-index: -1;
+        }
+        .stage {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            margin: 2rem 0;
+        }
+        .stage:hover {
+            transform: scale(1.05);
+        }
+        .topics-box {
+            display: none;
+            position: absolute;
+            left: +280px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            width: 260px;
+            z-index: 10;
+        }
+        .stage:hover .topics-box {
+            display: block;
+        }
+    </style>
+    </head>
+    <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+        <!-- Navigation Bar -->
+        <nav class="bg-white shadow p-4 mb-8">
+            <div class="container mx-auto flex items-center">
+                <div class="flex-grow flex justify-center space-x-6">
+                    <a href="{{ url_for('index') }}" class="text-blue-600 font-semibold hover:underline">Home</a>
+                    <a href="{{ url_for('dashboard') }}" class="text-blue-600 font-semibold hover:underline">Dashboard</a>
+                    <a href="{{ url_for('path') }}" class="text-blue-600 font-semibold hover:underline">Path</a>
+                    <a href="{{ url_for('videos') }}" class="text-blue-600 font-semibold hover:underline">Videos</a>
+                    <a href="{{ url_for('quiz') }}" class="text-blue-600 font-semibold hover:underline">Quiz</a>
+                    <a href="{{ url_for('descri') }}" class="text-blue-600 font-semibold hover:underline">Description</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('login') }}" class="text-blue-600 font-semibold hover:underline">Login</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Path Visualization -->
+        <main class="max-w-7xl mx-auto px-4 py-16">
+            <h2 class="text-3xl font-bold text-center mb-16">Your Learning
+                Journey</h2>
+
+            <div class="path-container max-w-md mx-auto">
+                <!-- Path Connection Line -->
+                <div class="path-line"></div>
+
+                <!-- Stages -->
+                <div class="flex flex-col">
+                    <div class="stage flex items-center">
+                        <div
+                        class="w-16 h-16 rounded-full" style="background-color: rgb(191, 98, 6); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        border: b">                            📖
+                        </div>
+                        <div class="ml-4 font-semibold">Bronze</div>
+                        <div class="topics-box">
+                            <h3 class="font-bold mb-3">Topics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>➤ Basic Concepts</li>
+                                <li>➤ Introduction to Theory</li>
+                                <li>➤ Fundamental Principles</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage flex items-center">
+                        <div
+                            class="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg">
+                            📖
+                        </div>
+                        <div class="ml-4 font-semibold">Silver</div>
+                        <div class="topics-box">
+                            <h3 class="font-bold mb-3">Topics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>➤ Advanced Theory</li>
+                                <li>➤ Practical Applications</li>
+                                <li>➤ Problem Solving Basics</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage flex items-center">
+                        <div
+                            class="w-16 h-16 rounded-full bg-yellow-500 text-white flex items-center justify-center shadow-lg">
+                            📖
+                        </div>
+                        <div class="ml-4 font-semibold">Gold</div>
+                        <div class="topics-box">
+                            <h3 class="font-bold mb-3">Topics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>➤ Complex Problems</li>
+                                <li>➤ Critical Analysis</li>
+                                <li>➤ Advanced Applications</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage flex items-center">
+                        <div
+                            class="w-16 h-16 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-lg">
+                            📖
+                        </div>
+                        <div class="ml-4 font-semibold">Platinum</div>
+                        <div class="topics-box">
+                            <h3 class="font-bold mb-3">Topics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>➤ Specialized Topics</li>
+                                <li>➤ Expert Techniques</li>
+                                <li>➤ Case Studies</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stage flex items-center">
+                        <div
+                            class="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg">
+                            📖
+                        </div>
+                        <div class="ml-4 font-semibold">Dimond</div>
+                        <div class="topics-box">
+                            <h3 class="font-bold mb-3">Topics</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>➤ Research Methods</li>
+                                <li>➤ Professional Applications</li>
+                                <li>➤ Final Projects</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </body>
+</html>

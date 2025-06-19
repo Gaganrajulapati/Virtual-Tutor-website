@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Learn - Dashboard</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow p-4 mb-8">
+        <div class="container mx-auto flex items-center">
+            <div class="flex-grow flex justify-center space-x-6">
+                <a href="{{ url_for('index') }}" class="text-blue-600 font-semibold hover:underline">Home</a>
+                <a href="{{ url_for('dashboard') }}" class="text-blue-600 font-semibold hover:underline">Dashboard</a>
+                <a href="{{ url_for('path') }}" class="text-blue-600 font-semibold hover:underline">Path</a>
+                <a href="{{ url_for('videos') }}" class="text-blue-600 font-semibold hover:underline">Videos</a>
+                <a href="{{ url_for('quiz') }}" class="text-blue-600 font-semibold hover:underline">Quiz</a>
+                <a href="{{ url_for('descri') }}" class="text-blue-600 font-semibold hover:underline">Description</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="{{ url_for('login') }}" class="text-blue-600 font-semibold hover:underline">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-16">
+      <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">
+        Dashboard
+      </h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href="{{ url_for('videos') }}" class="block bg-white rounded-lg shadow p-6 text-center hover:shadow-lg transition">
+          <div class="text-6xl mb-4">📹</div>
+          <h2 class="text-xl font-semibold mb-2">Video Tutorials</h2>
+          <p class="text-gray-600">Watch and learn from curated videos</p>
+        </a>
+        <a href="{{ url_for('quiz') }}" class="block bg-white rounded-lg shadow p-6 text-center hover:shadow-lg transition">
+          <div class="text-6xl mb-4">✓</div>
+          <h2 class="text-xl font-semibold mb-2">Quizzes</h2>
+          <p class="text-gray-600">Test your knowledge with quizzes</p>
+        </a>
+        <a href="{{ url_for('descri') }}" class="block bg-white rounded-lg shadow p-6 text-center hover:shadow-lg transition">
+          <div class="text-6xl mb-4">📝</div>
+          <h2 class="text-xl font-semibold mb-2">Descriptive Tests</h2>
+          <p class="text-gray-600">Practice descriptive questions</p>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>
